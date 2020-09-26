@@ -1,6 +1,6 @@
 <div align="center">
 
-![icon](data/icons/com.github.hezral.movens.svg)
+![icon](data/com.github.hezral.movens.svg)
 
 # Movens
 
