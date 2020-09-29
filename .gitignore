@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 .code-workspace
+movens_vscode_workspace.code-workspace
