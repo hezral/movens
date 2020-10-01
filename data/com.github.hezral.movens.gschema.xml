@@ -2,6 +2,11 @@
 
 <schemalist>
     <schema path="/com/github/hezral/movens/" id="com.github.hezral.movens">
+        <key name="prefer-dark-style" type="b">
+            <default>true</default>
+            <summary>If the dark Gtk stylesheet should be used</summary>
+            <description>If the dark Gtk stylesheet should be used</description>
+        </key>
         <key name="pos-x" type="i">
             <default>360</default>
             <summary>Horizontal position</summary>

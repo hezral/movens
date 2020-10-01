@@ -72,10 +72,20 @@ class MovensWindow(Gtk.ApplicationWindow):
         # pass
 
         # sidebar action box
+        ## settings button
+        settings_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("preferences-system-symbolic", Gtk.IconSize.MENU))
+        settings_button.set_valign(Gtk.Align.CENTER)
+        settings_button.set_halign(Gtk.Align.START)
+        settings_button.set_always_show_image(True)
+        settings_button.set_can_focus(False)
+        settings_button.get_style_context().add_class ("flat")
+        settings_button.get_style_context().add_class ("font-bold")
+        settings_button.get_style_context().add_class ("ql-button")
+
         ## add units button
-        add_units_button = Gtk.Button(label="Add Unit", image=Gtk.Image.new_from_icon_name("list-add-symbolic", Gtk.IconSize.MENU))
+        add_units_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("list-add-symbolic", Gtk.IconSize.MENU))
         add_units_button.set_valign(Gtk.Align.CENTER)
-        add_units_button.set_halign(Gtk.Align.START)
+        add_units_button.set_halign(Gtk.Align.FILL)
         add_units_button.set_always_show_image(True)
         add_units_button.set_can_focus(False)
         add_units_button.get_style_context().add_class ("flat")
@@ -83,9 +93,9 @@ class MovensWindow(Gtk.ApplicationWindow):
         add_units_button.get_style_context().add_class ("ql-button")
 
         ## delete units button
-        delete_units_button = Gtk.Button(label="Add Unit", image=Gtk.Image.new_from_icon_name("list-remove-symbolic", Gtk.IconSize.MENU))
+        delete_units_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("list-remove-symbolic", Gtk.IconSize.MENU))
         delete_units_button.set_valign(Gtk.Align.CENTER)
-        delete_units_button.set_halign(Gtk.Align.START)
+        delete_units_button.set_halign(Gtk.Align.FILL)
         delete_units_button.set_always_show_image(True)
         delete_units_button.set_can_focus(False)
         delete_units_button.get_style_context().add_class ("flat")
@@ -100,8 +110,11 @@ class MovensWindow(Gtk.ApplicationWindow):
         sidebar_action_box.set_margin_top(6)
         sidebar_action_box.set_margin_start(9)
         sidebar_action_box.set_hexpand(True)
-        sidebar_action_box.pack_start(add_units_button, False, False, 0)
-        sidebar_action_box.pack_start(delete_units_button, False, False, 0)
+        sidebar_action_box.set_halign(Gtk.Align.FILL)
+        sidebar_action_box.pack_start(settings_button, False, False, 0)
+        sidebar_action_box.pack_end(delete_units_button, False, False, 0)
+        sidebar_action_box.pack_end(add_units_button, False, False, 0)
+        
 
         # drag n drop grid construct
         drag_drop_grid = Gtk.Grid()
@@ -176,6 +189,8 @@ class MovensWindow(Gtk.ApplicationWindow):
         mode_switch.set_valign(Gtk.Align.CENTER)
         mode_switch.bind_property("active", gtk_settings, "gtk-application-prefer-dark-theme", GObject.BindingFlags.BIDIRECTIONAL)
 
+        
+
         right_header = Gtk.HeaderBar()
         right_header.set_decoration_layout(":maximize")
         right_header.set_show_close_button(True)
@@ -202,6 +217,7 @@ class MovensWindow(Gtk.ApplicationWindow):
 
         settings.bind("pane-position", header_paned, "position", Gio.SettingsBindFlags.DEFAULT)
         settings.bind("pane-position", pane, "position", Gio.SettingsBindFlags.DEFAULT)
+        settings.bind ("prefer-dark-style", mode_switch, "active", Gio.SettingsBindFlags.DEFAULT)
 
 
 #------------------CLASS-SEPARATOR------------------#
