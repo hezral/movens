@@ -23,8 +23,10 @@ import sys
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Granite', '1.0')
-from gi.repository import Gtk, Gdk, Gio, Granite, GObject
+from gi.repository import Gtk, Gdk, Gio, Granite, GObject, Pango
 from constants import AppAttributes
+from welcome import WelcomeView
+from datetime import datetime
 
 
 #------------------CLASS-SEPARATOR------------------#
@@ -39,14 +41,12 @@ class MovensWindow(Gtk.ApplicationWindow):
         self.set_resizable(True)
         
         width = 900
-        height = 640
+        height = 700
         self.set_size_request(width, height)
         geometry = Gdk.Geometry()
         setattr(geometry, 'min_height', height)
         setattr(geometry, 'min_width', width)
         self.set_geometry_hints(None, geometry, Gdk.WindowHints.MIN_SIZE)
-
-
 
 
         # stack construct
@@ -57,7 +57,7 @@ class MovensWindow(Gtk.ApplicationWindow):
 
         welcome = WelcomeView()
         unit_editor = UnitEditor()
-        stack.add_named(welcome, "welcome")
+        #stack.add_named(welcome, "welcome")
         stack.add_named(unit_editor, "unit_editor")
 
         # units listbox construct
@@ -69,7 +69,16 @@ class MovensWindow(Gtk.ApplicationWindow):
         units_listbox.set_vexpand(True)
 
         ## add units to the listbox
-        # pass
+        units_listbox.add(UnitRow())
+        units_listbox.add(UnitRow())
+        units_listbox.add(UnitRow())
+        units_listbox.add(UnitRow())
+        units_listbox.add(UnitRow())
+        units_listbox.add(UnitRow())
+        units_listbox.add(UnitRow())
+        units_listbox.add(UnitRow())
+        units_listbox.add(UnitRow())
+
 
         # sidebar action box
         ## settings button
@@ -158,7 +167,6 @@ class MovensWindow(Gtk.ApplicationWindow):
         # sidebar construct
         sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         sidebar.get_style_context().add_class("pane")
-        #sidebar.get_style_context().add_class("sidebar")
         sidebar.add(drag_drop_grid)
         sidebar.add(motion_grid_revealer)
         sidebar.pack_start(units_listbox_scrolled, True, True, 0)
@@ -173,15 +181,28 @@ class MovensWindow(Gtk.ApplicationWindow):
         pane.pack2(stack, True, False)
         #pane.props.min_position = 255
 
-        # header construct
-        left_header = Gtk.HeaderBar()
-        left_header.set_decoration_layout("close")
-        left_header.set_show_close_button(True)
-        left_header.get_style_context().add_class("left-header")
-        left_header.get_style_context().add_class("titlebar")
-        left_header.get_style_context().add_class("default-decoration")
-        left_header.get_style_context().add_class(Gtk.STYLE_CLASS_FLAT)
+        # headerbar construct
+        # headerbar search field
+        search_entry = Gtk.SearchEntry()
+        search_entry.props.placeholder_text = "Search\u2026"
+        search_entry.set_hexpand(True)   
+        search_entry.set_halign(Gtk.Align.FILL)
+        search_entry.get_style_context().add_class("search")
+        search_entry.set_margin_right(6)
+        search_entry.set_margin_top(6)
+        search_entry.set_size_request(-1, 32)
 
+        # headerbar search button
+        search_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("system-search-symbolic", Gtk.IconSize.MENU))
+        search_button.set_valign(Gtk.Align.CENTER)
+        search_button.set_halign(Gtk.Align.START)
+        search_button.set_always_show_image(True)
+        search_button.set_can_focus(False)
+        search_button.get_style_context().add_class ("flat")
+        search_button.get_style_context().add_class ("font-bold")
+        search_button.get_style_context().add_class ("ql-button")
+
+        # # headerbar right construct
         gtk_settings = Gtk.Settings.get_default()
         mode_switch = Granite.ModeSwitch.from_icon_name("display-brightness-symbolic", "weather-clear-night-symbolic")
         mode_switch.props.primary_icon_tooltip_text = "Light mode"
@@ -189,8 +210,17 @@ class MovensWindow(Gtk.ApplicationWindow):
         mode_switch.set_valign(Gtk.Align.CENTER)
         mode_switch.bind_property("active", gtk_settings, "gtk-application-prefer-dark-theme", GObject.BindingFlags.BIDIRECTIONAL)
 
-        
+        # headerbar left construct
+        left_header = Gtk.HeaderBar()
+        left_header.set_decoration_layout("close")
+        left_header.set_show_close_button(True)
+        left_header.get_style_context().add_class("left-header")
+        left_header.get_style_context().add_class("titlebar")
+        left_header.get_style_context().add_class("default-decoration")
+        left_header.get_style_context().add_class(Gtk.STYLE_CLASS_FLAT)
+        left_header.set_custom_title(search_entry)
 
+        # headerbar right construct
         right_header = Gtk.HeaderBar()
         right_header.set_decoration_layout(":maximize")
         right_header.set_show_close_button(True)
@@ -201,23 +231,126 @@ class MovensWindow(Gtk.ApplicationWindow):
         right_header.set_hexpand(True)
         right_header.pack_end(mode_switch)
 
+        # headerbar paned construct
         header_paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
         header_paned.pack1(left_header, False, False)
         header_paned.pack2(right_header, True, False)
-        #header_paned.props.min_position = 255        
-        
+
+
+        # window construct
         self.get_style_context().add_class("rounded")
         self.set_titlebar(header_paned)
+
+        ## need to remove this class *after* setting it as the window titlebar
         header_paned.get_style_context().remove_class("titlebar")
 
-        # self construct
+        # add to window
         self.add(pane)
 
         settings = Gio.Settings(schema_id="com.github.hezral.movens")
-
         settings.bind("pane-position", header_paned, "position", Gio.SettingsBindFlags.DEFAULT)
         settings.bind("pane-position", pane, "position", Gio.SettingsBindFlags.DEFAULT)
         settings.bind ("prefer-dark-style", mode_switch, "active", Gio.SettingsBindFlags.DEFAULT)
+
+        self.show_all()
+
+        # hide toolbar buttons on all rows by iterating through all the child objects in listbox
+        units_listbox.foreach(lambda child, data: child.delete_button.hide(), None)
+
+
+#------------------CLASS-SEPARATOR------------------#
+
+
+class UnitRow(Gtk.ListBoxRow):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        __gsignals__ = {'added_new_item': (GObject.SIGNAL_RUN_FIRST, None, (str,))}
+        __gsignals__ = {'item_deleted': (GObject.SIGNAL_RUN_FIRST, None, (str,))}
+
+        # unit row delete button
+        self.delete_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("edit-delete-symbolic", Gtk.IconSize.MENU))
+        self.delete_button.set_can_focus(False)
+        self.delete_button.set_can_default(False)
+        self.delete_button.get_style_context().add_class("flat")
+
+        #self.unit_icon = Gtk.Image().new_from_icon_name("application-default-icon", Gtk.IconSize.DIALOG)
+        self.unit_icon = Gtk.Button(image=Gtk.Image.new_from_icon_name("application-default-icon", Gtk.IconSize.DIALOG))
+        self.unit_icon.set_can_focus(False)
+        self.unit_icon.set_can_default(False)
+        self.unit_icon.get_style_context().add_class("unit-icon-row")
+        self.unit_icon.connect("clicked", self.on_unit_icon_clicked)
+
+        self.status_image = Gtk.Image().new_from_icon_name("user-offline", Gtk.IconSize.MENU)
+        self.status_image.set_valign(Gtk.Align.END)
+        self.status_image.set_halign(Gtk.Align.END)
+        self.status_image.set_margin_right(3)
+
+        overlay = Gtk.Overlay()
+        overlay.add(self.unit_icon)
+        overlay.add_overlay(self.status_image)
+        
+        # unit name label
+        unit_name = "MyName"
+        unit_name_label = Gtk.Label()
+        unit_name_label.set_ellipsize(Pango.EllipsizeMode.END)
+        unit_name_label.set_max_width_chars(50)
+        unit_name_label.props.halign = Gtk.Align.START
+        unit_name_label.props.valign = Gtk.Align.END
+        unit_name_label.set_max_width_chars(25)
+        unit_name_label.set_line_wrap(True)
+        unit_name_label.set_markup(f'<b>{unit_name}</b>')
+        
+        # unit path label
+        contents = Gtk.Label("Unit Path Here")
+        contents.set_hexpand(False)
+        contents.set_line_wrap(True)
+        contents.set_max_width_chars(50)
+        contents.props.halign = Gtk.Align.START
+        contents.props.valign = Gtk.Align.CENTER
+
+        # unit last run timestamp label
+        lastrun = datetime.now()
+        timestamp_label = Gtk.Label(lastrun)
+        timestamp_label.props.halign = Gtk.Align.START
+        timestamp_label.props.valign = Gtk.Align.CENTER
+        timestamp_label.props.max_width_chars = 45
+        timestamp_label.set_ellipsize(Pango.EllipsizeMode.END)
+        
+        #grid for content and timestamp
+        label_grid = Gtk.Grid()
+        label_grid.set_row_spacing(3)
+        label_grid.attach(unit_name_label, 0, 0, 1, 1)
+        label_grid.attach(contents, 0, 1, 1, 1)
+        #label_grid.attach(timestamp_label, 0, 2, 1, 1)
+
+
+        row_box = Gtk.Box(Gtk.Orientation.HORIZONTAL, 10)
+        # row_box.props.margin = 16
+        row_box.props.margin_top = row_box.props.margin_bottom = 10
+        row_box.props.margin_left = row_box.props.margin_right = 6
+        row_box.pack_start(overlay, False, False, 0)
+        row_box.pack_start(label_grid, True, True, 0)
+        row_box.pack_end(self.delete_button, False, False, 0)
+
+
+
+        self.add(row_box)
+        
+        # self.set_size_request(-1, 1)
+
+        #self.get_style_context().add_class(Gtk.STYLE_CLASS_MENUITEM)
+        
+    def on_unit_icon_clicked(self, widget):
+        if self.is_selected() is True:
+            if self.status_image.props.icon_name == "user-offline":
+                self.status_image.set_from_icon_name("user-available", Gtk.IconSize.MENU)
+            else:
+                self.status_image.set_from_icon_name("user-offline", Gtk.IconSize.MENU)
+        else:
+            self.activate()
+        
+
 
 
 #------------------CLASS-SEPARATOR------------------#
@@ -227,8 +360,8 @@ class UnitEditor(Gtk.Box):
         super().__init__(*args, **kwargs)
 
         # icon
-        unit_icon = UnitIcon()
-        #unit_icon.connect("changed", self.on_icon_changed)
+        self.unit_icon = UnitIcon()
+        #self.unit_icon.connect("changed", self.on_icon_changed)
         
         # name label
         unit_name_label = Gtk.Label("Name")
@@ -256,8 +389,8 @@ class UnitEditor(Gtk.Box):
         unit_header_grid = Gtk.Grid()
         unit_header_grid.set_column_spacing(12)
         unit_header_grid.set_row_spacing(6)
-        unit_header_grid.props.margin = 12
-        unit_header_grid.attach(unit_icon, 0, 0, 1, 1)
+        #unit_header_grid.props.margin = 12
+        unit_header_grid.attach(self.unit_icon, 0, 0, 1, 1)
         unit_header_grid.attach(unit_name_box, 1, 0, 1, 1)
 
         # delete button
@@ -281,10 +414,10 @@ class UnitEditor(Gtk.Box):
         # self construct
         self.set_orientation(Gtk.Orientation.VERTICAL)
         self.set_spacing(12)
-        self.set_margin_top(12)
-        self.set_margin_bottom(12)
-        self.set_margin_left(12)
-        self.set_margin_right(12)
+        self.set_margin_top(6)
+        self.set_margin_bottom(6)
+        self.set_margin_left(6)
+        self.set_margin_right(6)
         self.get_style_context().add_class("item-editor")
         self.pack_start(unit_header_grid, False, False, 0)
         self.pack_end(sidebar_action_box, False, False, 0)
@@ -308,11 +441,6 @@ class UnitEditor(Gtk.Box):
 #------------------CLASS-SEPARATOR------------------#
 
 
-
-
-#------------------CLASS-SEPARATOR------------------#
-
-
 class UnitIcon(Gtk.Button):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -324,7 +452,7 @@ class UnitIcon(Gtk.Button):
 
         # default icon
         icon = Gtk.Image()
-        icon.set_from_icon_name("image-missing", Gtk.IconSize.DIALOG)
+        icon.set_from_icon_name("application-default-icon", Gtk.IconSize.DIALOG)
         icon.set_pixel_size(64)
         # set button image
         self.set_image(icon)
@@ -370,45 +498,7 @@ class IconSelector(Gtk.Popover):
 #------------------CLASS-SEPARATOR------------------#
 
 
-class WelcomeView(Gtk.Grid):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
-        self.settings = Gtk.Settings.get_default()
-
-        # main icon/logo
-        icon = Gtk.Image()
-        icon.set_from_icon_name("system-os-installer", Gtk.IconSize.DIALOG)
-        icon.set_pixel_size(96)
-        icon.props.margin = 15
-
-        # welcome widget
-        welcome_widget = Granite.WidgetsWelcome().new("Movens", AppAttributes.application_description)
-        welcome_widget.connect("activated", self.on_welcome_activated)
-
-        # welcome menu
-        welcome_widget.append("text-x-readme", "README", "Get started manual")
-        welcome_widget.append("preferences-desktop", "Preferences", "Configure Movens the way you want it")
-
-        # construct grid
-        self.props.margin = 40
-        self.attach(icon, 0, 1, 1, 1)
-        self.attach(welcome_widget, 0, 2, 1, 1)
-
-    def on_welcome_activated(self, widget, index):
-        # add index actions based on menu items in welcome widget
-        if index == 0:
-            # Use GTK Dark theme
-            if self.settings.get_property("gtk-application-prefer-dark-theme") == True:
-                self.settings.set_property("gtk-application-prefer-dark-theme", False)
-            else:
-                self.settings.set_property("gtk-application-prefer-dark-theme", True)
-        elif index == 1:
-            # Open terminal
-            try:
-                pass
-            except:
-                print('Terminal Not Found!')
 
 
 #------------------CLASS-SEPARATOR------------------#
@@ -442,7 +532,7 @@ class MovensApp(Gtk.Application):
             # when the last one is closed the application shuts down
             self.window = MovensWindow(application=self)
             self.add_window(self.window)
-            self.window.show_all()
+            # self.window.show_all()
 
 
 #------------------CLASS-SEPARATOR------------------#

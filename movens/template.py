@@ -19,26 +19,9 @@
     along with Movens.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import sys
 import gi
-from gi.repository import GObject
-
-class MyObject(GObject.GObject):
-    __gsignals__ = {
-        'adi': (GObject.SIGNAL_RUN_FIRST, None, (int,))
-    }
-
-    # def do_adi(self, arg):
-    #     print("method handler for `my_signal' called with argument", arg)
-        
-        
-
-myobj = MyObject()
-
-myobj.emit("adi", 'abcd') # emit the signal "my_signal", with the
-                             # argument 42
-
-print(type(myobj))
-
-print(dir(myobj))
-
-
+gi.require_version('Gtk', '3.0')
+gi.require_version('Granite', '1.0')
+from gi.repository import Gtk, Gdk, Gio, Granite
+from constants import AppAttributes

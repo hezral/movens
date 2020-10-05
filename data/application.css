@@ -19,8 +19,11 @@
  * Authored by: Adi Hezral <hezral@gmail.com>
  */
 
- @define-color shaded_bg shade(@theme_base_color, 0.92);
+/* @define-color theme_base_color #452981; */
+@define-color shaded_bg shade(@theme_base_color, 0.92);
 @define-color shaded_base shade(@theme_base_color, 0.98);
+
+ 
 
 .ql-entry {
     background-color: @shaded_base;
@@ -69,9 +72,7 @@ padding-left: 20px;
 }
 
 
-.right-header, .item-editor, .welcome {
-    background-color: @shaded_base;
-} 
+
 
 .right-header:dir(ltr) {
     border-left: none;
@@ -80,40 +81,6 @@ padding-left: 20px;
 
 .right-header:dir(rtl) {
     border-top-right-radius: 0;
-}
-
-paned {
-    background-color: @shaded_bg;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-}
-
-paned.horizontal > separator {
-    background-image:
-        linear-gradient(
-            to right,
-            @menu_separator 1px,
-            @menu_separator_shadow 1px,
-            @menu_separator_shadow 2px,
-            transparent 2px
-        );
-    margin-right: 0px;
-    min-width: 1px;
-    padding-right: 0px;
-}
-
-paned.vertical > separator {
-    background-image:
-        linear-gradient(
-            @menu_separator -2px,
-            @menu_separator_shadow 1px,
-            @menu_separator_shadow 2px,
-            transparent 2px
-        );
-    margin-bottom: 0px;
-    min-height: 1px;
 }
 
 .titlebar {
@@ -174,10 +141,7 @@ grid.titlebar {
     outline-width: 0;
 }
 
-/* .left-header, .right-header {
-    min-height: 0px;
-    padding: 0;
-} */
+
 
 .flat .image-button {
 padding: 3px;
@@ -219,7 +183,6 @@ padding: 3px;
 
 .item-row2 {
     padding-top: 1px;
-    
     padding-left: 20px;
     border-style: solid;
     border-width: 1px 0;
@@ -263,9 +226,10 @@ padding: 3px;
 
 /* header section */
 
-.right-header, .right-stack {
+.right-header, .right-stack, .item-editor, .welcome {
     background-color: @shaded_base;
  }
+
 
 
 .pane, .right-stack {
@@ -273,13 +237,82 @@ padding: 3px;
     border-bottom-right-radius: 4px;
 }
 
-.left-header, .right-header {
-    min-height: 30px;
-    padding-left: 6px;
-    padding-right: 6px;
-    padding-top: 4px;
+
+/* .right-header, .right-stack, .item-editor, .welcome {
+    transition: all 150ms ease-in-out;
+} */
+
+paned {
+    background-color: @shaded_bg;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
 }
 
-.right-header, .right-stack, .item-editor, .welcome {
-    transition: all 100ms ease-in-out;
+paned.horizontal > separator {
+    background-image:
+        linear-gradient(
+            to right,
+            @menu_separator 1px,
+            @menu_separator_shadow 1px,
+            @menu_separator_shadow 2px,
+            transparent 2px
+        );
+    margin-right: 0px;
+    min-width: 1px;
+}
+
+paned.vertical > separator {
+    background-image:
+        linear-gradient(
+            @menu_separator -2px,
+            @menu_separator_shadow 1px,
+            @menu_separator_shadow 2px,
+            transparent 2px
+        );
+    margin-bottom: 0px;
+    min-height: 1px;
+}
+
+.pane > separator {
+    padding-right: 1px;
+}
+
+
+.search:dir(ltr) {
+    border-radius: 16px;
+}
+
+.search:dir(ltr) > image.left {
+padding-left: 6px;
+}
+
+.search:dir(ltr) > image.right {
+padding-right: 6px;
+padding-bottom: 3px;
+}
+
+.left-header, .right-header {
+    min-height: 30px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.titlebutton {
+    margin-top: 6px;
+    /* margin-left: 2px;
+    margin-right: 2px; */
+}
+    
+headerbar > grid {
+    margin-top: 6px;
+}
+
+.unit-icon-row {
+    background: none;
+    border: none;
+    box-shadow: none;
 }
