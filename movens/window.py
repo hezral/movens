@@ -37,8 +37,8 @@ class MovensWindow(Gtk.ApplicationWindow):
 
         # self construct
         self.props.title = AppAttributes.application_name
-        self.set_border_width(0)
-        self.set_resizable(True)
+        self.props.border_width = 0
+        self.props.resizable = True
         
         width = 900
         height = 700
@@ -65,8 +65,8 @@ class MovensWindow(Gtk.ApplicationWindow):
         units_listbox.get_style_context().add_class("pane")
         units_listbox.set_activate_on_single_click(True)
         units_listbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
-        units_listbox.set_hexpand(True)
-        units_listbox.set_vexpand(True)
+        units_listbox.props.hexpand = True
+        units_listbox.props.vexpand = True
 
         ## add units to the listbox
         units_listbox.add(UnitRow())
@@ -83,30 +83,30 @@ class MovensWindow(Gtk.ApplicationWindow):
         # sidebar action box
         ## settings button
         settings_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("preferences-system-symbolic", Gtk.IconSize.MENU))
-        settings_button.set_valign(Gtk.Align.CENTER)
-        settings_button.set_halign(Gtk.Align.START)
-        settings_button.set_always_show_image(True)
-        settings_button.set_can_focus(False)
+        settings_button.props.valign = Gtk.Align.CENTER
+        settings_button.props.halign = Gtk.Align.START
+        settings_button.props.always_show_image = True
+        settings_button.props.can_focus = False
         settings_button.get_style_context().add_class ("flat")
         settings_button.get_style_context().add_class ("font-bold")
         settings_button.get_style_context().add_class ("ql-button")
 
         ## add units button
         add_units_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("list-add-symbolic", Gtk.IconSize.MENU))
-        add_units_button.set_valign(Gtk.Align.CENTER)
-        add_units_button.set_halign(Gtk.Align.FILL)
-        add_units_button.set_always_show_image(True)
-        add_units_button.set_can_focus(False)
+        add_units_button.props.valign = Gtk.Align.CENTER
+        add_units_button.props.halign = Gtk.Align.FILL
+        add_units_button.props.always_show_image = True
+        add_units_button.props.can_focus = False
         add_units_button.get_style_context().add_class ("flat")
         add_units_button.get_style_context().add_class ("font-bold")
         add_units_button.get_style_context().add_class ("ql-button")
 
         ## delete units button
         delete_units_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("list-remove-symbolic", Gtk.IconSize.MENU))
-        delete_units_button.set_valign(Gtk.Align.CENTER)
-        delete_units_button.set_halign(Gtk.Align.FILL)
-        delete_units_button.set_always_show_image(True)
-        delete_units_button.set_can_focus(False)
+        delete_units_button.props.valign = Gtk.Align.CENTER
+        delete_units_button.props.halign = Gtk.Align.FILL
+        delete_units_button.props.always_show_image = True
+        delete_units_button.props.can_focus = False
         delete_units_button.get_style_context().add_class ("flat")
         delete_units_button.get_style_context().add_class ("font-bold")
         delete_units_button.get_style_context().add_class ("ql-button")
@@ -114,12 +114,12 @@ class MovensWindow(Gtk.ApplicationWindow):
         ## action box construct
         sidebar_action_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
         # sidebar_action_box.get_style_context().add_class("bottom-buttons")
-        sidebar_action_box.set_margin_end(9)
-        sidebar_action_box.set_margin_bottom(6)
-        sidebar_action_box.set_margin_top(6)
-        sidebar_action_box.set_margin_start(9)
-        sidebar_action_box.set_hexpand(True)
-        sidebar_action_box.set_halign(Gtk.Align.FILL)
+        sidebar_action_box.props.margin_end = 9
+        sidebar_action_box.props.margin_bottom = 6
+        sidebar_action_box.props.margin_top = 6
+        sidebar_action_box.props.margin_start =9
+        sidebar_action_box.props.hexpand = True
+        sidebar_action_box.props.halign = Gtk.Align.FILL
         sidebar_action_box.pack_start(settings_button, False, False, 0)
         sidebar_action_box.pack_end(delete_units_button, False, False, 0)
         sidebar_action_box.pack_end(add_units_button, False, False, 0)
@@ -127,15 +127,15 @@ class MovensWindow(Gtk.ApplicationWindow):
 
         # drag n drop grid construct
         drag_drop_grid = Gtk.Grid()
-        drag_drop_grid.set_margin_start(6)
-        drag_drop_grid.set_margin_end(6)
+        drag_drop_grid.props.margin_start= 6
+        drag_drop_grid.props.margin_end = 6
         drag_drop_grid.props.height_request = 12
 
         # motion grid construct
         motion_grid = Gtk.Grid()
-        motion_grid.set_margin_start(6)
-        motion_grid.set_margin_end(6)
-        motion_grid.set_margin_bottom(12)
+        motion_grid.props.margin_start= 6
+        motion_grid.props.margin_end = 6
+        motion_grid.props.margin_bottom = 12
         motion_grid.props.height_request = 24
         motion_grid.get_style_context().add_class("grid-motion")
         motion_grid_revealer = Gtk.Revealer()
@@ -160,8 +160,8 @@ class MovensWindow(Gtk.ApplicationWindow):
 
         # units listbox scrolled window construct
         units_listbox_scrolled = Gtk.ScrolledWindow()
-        units_listbox_scrolled.set_hexpand(True)
-        units_listbox_scrolled.set_margin_bottom(6)
+        units_listbox_scrolled.props.hexpand = True
+        units_listbox_scrolled.props.margin_bottom = 6
         units_listbox_scrolled.add(units_listbox)
 
         # sidebar construct
@@ -185,19 +185,19 @@ class MovensWindow(Gtk.ApplicationWindow):
         # headerbar search field
         search_entry = Gtk.SearchEntry()
         search_entry.props.placeholder_text = "Search\u2026"
-        search_entry.set_hexpand(True)   
-        search_entry.set_halign(Gtk.Align.FILL)
+        search_entry.props.hexpand = True 
+        search_entry.props.halign = Gtk.Align.FILL
         search_entry.get_style_context().add_class("search")
-        search_entry.set_margin_right(6)
-        search_entry.set_margin_top(6)
+        search_entry.props.margin_right = 6
+        search_entry.props.margin_top = 6
         search_entry.set_size_request(-1, 32)
 
         # headerbar search button
         search_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("system-search-symbolic", Gtk.IconSize.MENU))
-        search_button.set_valign(Gtk.Align.CENTER)
-        search_button.set_halign(Gtk.Align.START)
-        search_button.set_always_show_image(True)
-        search_button.set_can_focus(False)
+        search_button.props.valign = Gtk.Align.CENTER
+        search_button.props.halign = Gtk.Align.START
+        search_button.props.always_show_image = True
+        search_button.props.can_focus = False
         search_button.get_style_context().add_class ("flat")
         search_button.get_style_context().add_class ("font-bold")
         search_button.get_style_context().add_class ("ql-button")
@@ -207,13 +207,13 @@ class MovensWindow(Gtk.ApplicationWindow):
         mode_switch = Granite.ModeSwitch.from_icon_name("display-brightness-symbolic", "weather-clear-night-symbolic")
         mode_switch.props.primary_icon_tooltip_text = "Light mode"
         mode_switch.props.secondary_icon_tooltip_text = "Dark mode"
-        mode_switch.set_valign(Gtk.Align.CENTER)
+        mode_switch.props.valign = Gtk.Align.CENTER
         mode_switch.bind_property("active", gtk_settings, "gtk-application-prefer-dark-theme", GObject.BindingFlags.BIDIRECTIONAL)
 
         # headerbar left construct
         left_header = Gtk.HeaderBar()
-        left_header.set_decoration_layout("close")
-        left_header.set_show_close_button(True)
+        left_header.props.decoration_layout = "close"
+        left_header.props.show_close_button = True
         left_header.get_style_context().add_class("left-header")
         left_header.get_style_context().add_class("titlebar")
         left_header.get_style_context().add_class("default-decoration")
@@ -222,13 +222,13 @@ class MovensWindow(Gtk.ApplicationWindow):
 
         # headerbar right construct
         right_header = Gtk.HeaderBar()
-        right_header.set_decoration_layout(":maximize")
-        right_header.set_show_close_button(True)
+        right_header.props.decoration_layout = ":maximize"
+        right_header.props.show_close_button = False
         right_header.get_style_context().add_class("right-header")
         right_header.get_style_context().add_class("titlebar")
         right_header.get_style_context().add_class("default-decoration")
         right_header.get_style_context().add_class(Gtk.STYLE_CLASS_FLAT)
-        right_header.set_hexpand(True)
+        right_header.props.hexpand = True
         right_header.pack_end(mode_switch)
 
         # headerbar paned construct
@@ -270,21 +270,21 @@ class UnitRow(Gtk.ListBoxRow):
 
         # unit row delete button
         self.delete_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("edit-delete-symbolic", Gtk.IconSize.MENU))
-        self.delete_button.set_can_focus(False)
-        self.delete_button.set_can_default(False)
+        self.delete_button.props.can_focus = False
+        self.delete_button.props.can_default = False
         self.delete_button.get_style_context().add_class("flat")
 
         #self.unit_icon = Gtk.Image().new_from_icon_name("application-default-icon", Gtk.IconSize.DIALOG)
         self.unit_icon = Gtk.Button(image=Gtk.Image.new_from_icon_name("application-default-icon", Gtk.IconSize.DIALOG))
-        self.unit_icon.set_can_focus(False)
-        self.unit_icon.set_can_default(False)
+        self.unit_icon.props.can_focus = False
+        self.unit_icon.props.can_default = False
         self.unit_icon.get_style_context().add_class("unit-icon-row")
         self.unit_icon.connect("clicked", self.on_unit_icon_clicked)
 
         self.status_image = Gtk.Image().new_from_icon_name("user-offline", Gtk.IconSize.MENU)
-        self.status_image.set_valign(Gtk.Align.END)
-        self.status_image.set_halign(Gtk.Align.END)
-        self.status_image.set_margin_right(3)
+        self.status_image.props.valign = Gtk.Align.END
+        self.status_image.props.halign =Gtk.Align.END
+        self.status_image.props.margin_right = 3
 
         overlay = Gtk.Overlay()
         overlay.add(self.unit_icon)
@@ -293,19 +293,16 @@ class UnitRow(Gtk.ListBoxRow):
         # unit name label
         unit_name = "MyName"
         unit_name_label = Gtk.Label()
-        unit_name_label.set_ellipsize(Pango.EllipsizeMode.END)
-        unit_name_label.set_max_width_chars(50)
+        unit_name_label.props.ellipsize = Pango.EllipsizeMode.END
+        unit_name_label.props.max_width_chars = 50
         unit_name_label.props.halign = Gtk.Align.START
         unit_name_label.props.valign = Gtk.Align.END
-        unit_name_label.set_max_width_chars(25)
-        unit_name_label.set_line_wrap(True)
-        unit_name_label.set_markup(f'<b>{unit_name}</b>')
+        unit_name_label.set_markup(f"<b>{unit_name}</b>")
         
         # unit path label
         contents = Gtk.Label("Unit Path Here")
-        contents.set_hexpand(False)
-        contents.set_line_wrap(True)
-        contents.set_max_width_chars(50)
+        contents.props.hexpand = False
+        contents.props.max_width_chars = 50
         contents.props.halign = Gtk.Align.START
         contents.props.valign = Gtk.Align.CENTER
 
@@ -315,11 +312,11 @@ class UnitRow(Gtk.ListBoxRow):
         timestamp_label.props.halign = Gtk.Align.START
         timestamp_label.props.valign = Gtk.Align.CENTER
         timestamp_label.props.max_width_chars = 45
-        timestamp_label.set_ellipsize(Pango.EllipsizeMode.END)
+        timestamp_label.props.ellipsize = Pango.EllipsizeMode.END
         
         #grid for content and timestamp
         label_grid = Gtk.Grid()
-        label_grid.set_row_spacing(3)
+        label_grid.props.row_spacing = 3
         label_grid.attach(unit_name_label, 0, 0, 1, 1)
         label_grid.attach(contents, 0, 1, 1, 1)
         #label_grid.attach(timestamp_label, 0, 2, 1, 1)
@@ -336,10 +333,7 @@ class UnitRow(Gtk.ListBoxRow):
 
 
         self.add(row_box)
-        
-        # self.set_size_request(-1, 1)
-
-        #self.get_style_context().add_class(Gtk.STYLE_CLASS_MENUITEM)
+        # self.get_style_context().add_class(Gtk.STYLE_CLASS_MENUITEM)
         
     def on_unit_icon_clicked(self, widget):
         if self.is_selected() is True:
@@ -366,13 +360,13 @@ class UnitEditor(Gtk.Box):
         # name label
         unit_name_label = Gtk.Label("Name")
         unit_name_label.get_style_context().add_class("h4")
-        unit_name_label.set_halign(Gtk.Align.START)
+        unit_name_label.props.halign = Gtk.Align.START
 
         # name entry
         unit_name_entry = Gtk.Entry()
         unit_name_entry.set_placeholder_text("Enter Name")
         unit_name_entry.get_style_context().add_class("h2")
-        unit_name_entry.set_valign(Gtk.Align.START)
+        unit_name_entry.props.valign = Gtk.Align.START
         #unit_name_entry.connect("changed", self.on_entry_changed)
 
         # name header entry construct
@@ -382,13 +376,13 @@ class UnitEditor(Gtk.Box):
         
         # name box
         unit_name_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        unit_name_box.set_hexpand(True)
+        unit_name_box.props.hexpand = True
         unit_name_box.add(unit_name_header)
         
         # unit header
         unit_header_grid = Gtk.Grid()
-        unit_header_grid.set_column_spacing(12)
-        unit_header_grid.set_row_spacing(6)
+        unit_header_grid.props.column_spacing = 12
+        unit_header_grid.props.row_spacing = 6
         #unit_header_grid.props.margin = 12
         unit_header_grid.attach(self.unit_icon, 0, 0, 1, 1)
         unit_header_grid.attach(unit_name_box, 1, 0, 1, 1)
@@ -413,11 +407,11 @@ class UnitEditor(Gtk.Box):
 
         # self construct
         self.set_orientation(Gtk.Orientation.VERTICAL)
-        self.set_spacing(12)
-        self.set_margin_top(6)
-        self.set_margin_bottom(6)
-        self.set_margin_left(6)
-        self.set_margin_right(6)
+        self.props.spacing = 12
+        self.props.margin_top = 6
+        self.props.margin_bottom = 6
+        self.props.margin_left = 6
+        self.props.margin_right = 6
         self.get_style_context().add_class("item-editor")
         self.pack_start(unit_header_grid, False, False, 0)
         self.pack_end(sidebar_action_box, False, False, 0)
@@ -456,6 +450,7 @@ class UnitIcon(Gtk.Button):
         icon.set_pixel_size(64)
         # set button image
         self.set_image(icon)
+        
 
         # icon selector
         self.icon_selector = IconSelector()

@@ -36,8 +36,8 @@ class WelcomeView(Gtk.Grid):
         icon = Gtk.Image()
         icon.set_from_icon_name("com.github.hezral.inspektor", Gtk.IconSize.DIALOG)
         icon.set_pixel_size(128)
-        icon.set_valign(Gtk.Align.END)
-        icon.set_halign(Gtk.Align.CENTER)
+        icon.props.valign = Gtk.Align.END
+        icon.props.halign = Gtk.Align.CENTER
         icon.props.margin = 15
 
         # welcome widget
