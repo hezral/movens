@@ -2,8 +2,12 @@
  
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
  
+__gsignals__ = {
+    'safe_value_changed': (GObject.SIGNAL_RUN_FIRST, None, (object, ))
+}
+
 window = Gtk.Window()
 window.set_default_size(200, 200)
 window.connect("destroy", Gtk.main_quit)

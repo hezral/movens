@@ -19,7 +19,6 @@
     along with Movens.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from constants import AppAttributes
 from datetime import datetime
 
 def FuzzyTimestamp(time=False):
@@ -60,8 +59,9 @@ def FuzzyTimestamp(time=False):
         return str(round(day_diff, 1)) + " days ago"
     if day_diff < 31:
         return str(round(day_diff / 7, 1)) + " weeks ago"
-    if day_diff < 365:
-        return str(round(day_diff / 30, 1)) + " months ago"
-    return str(round(day_diff / 365, 1)) + " years ago"
+    # if day_diff < 365:
+    #     return str(round(day_diff / 30, 1)) + " months ago"
+    # return str(round(day_diff / 365, 1)) + " years ago"
+    return time
 
 print(FuzzyTimestamp())

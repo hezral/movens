@@ -19,9 +19,11 @@
  * Authored by: Adi Hezral <hezral@gmail.com>
  */
 
-/* @define-color theme_base_color #452981; */
 @define-color shaded_bg shade(@theme_base_color, 0.92);
 @define-color shaded_base shade(@theme_base_color, 0.98);
+
+/* @define-color shaded_base shade(@theme_base_color, 0.92);
+@define-color shaded_bg shade(@theme_base_color, 0.98); */
 
  
 
@@ -36,9 +38,7 @@
     padding-left:8px;
 }
 
-.ql-button {
-    color: @theme_text_color;
-}
+
 
 .dialog-label {
     margin: 12px;
@@ -315,4 +315,45 @@ headerbar > grid {
     background: none;
     border: none;
     box-shadow: none;
+}
+
+.unit-disabled {
+    opacity: 0.5;
+    }
+    
+.unit-enabled {
+    opacity: 1.0;
+}
+
+.unit-name-row {
+    font-weight: bold;
+}
+    
+.unit-path-row {
+    font-size: small;
+}
+    
+.unit-lastrun-row {
+    font-size: small;
+}
+
+
+
+
+.action-button {
+    color: @theme_text_color;
+    border-radius: 50%;
+    box-shadow: none;
+    border: none;
+    border-width: 1px;
+    border-color: shade(@theme_base_color, 0.7);
+}
+
+
+.action-button:active {
+    border: solid;
+    border-width: 1px;
+    border-color: shade(@theme_base_color, 0.7);
+    background-color: shade(@theme_base_color, 0.89);
+    box-shadow: 0px 0px 2px 0px shade(@theme_base_color, 0.7) inset;
 }

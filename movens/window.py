@@ -40,8 +40,8 @@ class MovensWindow(Gtk.ApplicationWindow):
         self.props.border_width = 0
         self.props.resizable = True
         
-        width = 900
-        height = 700
+        width = 960
+        height = 720
         self.set_size_request(width, height)
         geometry = Gdk.Geometry()
         setattr(geometry, 'min_height', height)
@@ -49,7 +49,7 @@ class MovensWindow(Gtk.ApplicationWindow):
         self.set_geometry_hints(None, geometry, Gdk.WindowHints.MIN_SIZE)
 
 
-        # stack construct
+        #---- stack -----#
         stack = Gtk.Stack()
         stack.props.transition_type = Gtk.StackTransitionType.CROSSFADE
         stack.get_style_context().add_class("right-stack")
@@ -60,13 +60,14 @@ class MovensWindow(Gtk.ApplicationWindow):
         #stack.add_named(welcome, "welcome")
         stack.add_named(unit_editor, "unit_editor")
 
-        # units listbox construct
+        #---- sidebar listbox -----#
         units_listbox = Gtk.ListBox()
         units_listbox.get_style_context().add_class("pane")
         units_listbox.set_activate_on_single_click(True)
         units_listbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
         units_listbox.props.hexpand = True
         units_listbox.props.vexpand = True
+        # units_listbox.connect("added_new_item",self.on_row_added)
 
         ## add units to the listbox
         units_listbox.add(UnitRow())
@@ -80,51 +81,37 @@ class MovensWindow(Gtk.ApplicationWindow):
         units_listbox.add(UnitRow())
 
 
-        # sidebar action box
-        ## settings button
+        #---- sidebar action box -----#
+        # settings button
         settings_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("preferences-system-symbolic", Gtk.IconSize.MENU))
-        settings_button.props.valign = Gtk.Align.CENTER
-        settings_button.props.halign = Gtk.Align.START
-        settings_button.props.always_show_image = True
         settings_button.props.can_focus = False
-        settings_button.get_style_context().add_class ("flat")
-        settings_button.get_style_context().add_class ("font-bold")
-        settings_button.get_style_context().add_class ("ql-button")
+        settings_button.set_size_request(30, 30)
+        settings_button.get_style_context().add_class("action-button")
+        
 
-        ## add units button
+        # add units button
         add_units_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("list-add-symbolic", Gtk.IconSize.MENU))
-        add_units_button.props.valign = Gtk.Align.CENTER
-        add_units_button.props.halign = Gtk.Align.FILL
-        add_units_button.props.always_show_image = True
         add_units_button.props.can_focus = False
-        add_units_button.get_style_context().add_class ("flat")
-        add_units_button.get_style_context().add_class ("font-bold")
-        add_units_button.get_style_context().add_class ("ql-button")
+        add_units_button.set_size_request(30, 30)
+        add_units_button.get_style_context().add_class("action-button")
 
-        ## delete units button
+        # delete units button
         delete_units_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("list-remove-symbolic", Gtk.IconSize.MENU))
-        delete_units_button.props.valign = Gtk.Align.CENTER
-        delete_units_button.props.halign = Gtk.Align.FILL
-        delete_units_button.props.always_show_image = True
         delete_units_button.props.can_focus = False
-        delete_units_button.get_style_context().add_class ("flat")
-        delete_units_button.get_style_context().add_class ("font-bold")
-        delete_units_button.get_style_context().add_class ("ql-button")
+        delete_units_button.set_size_request(30, 30)
+        delete_units_button.get_style_context().add_class("action-button")
 
-        ## action box construct
-        sidebar_action_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
-        # sidebar_action_box.get_style_context().add_class("bottom-buttons")
-        sidebar_action_box.props.margin_end = 9
+        # action box construct
+        sidebar_action_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
+        sidebar_action_box.props.margin_end = 10
         sidebar_action_box.props.margin_bottom = 6
         sidebar_action_box.props.margin_top = 6
-        sidebar_action_box.props.margin_start =9
+        sidebar_action_box.props.margin_start = 10
         sidebar_action_box.props.hexpand = True
-        sidebar_action_box.props.halign = Gtk.Align.FILL
         sidebar_action_box.pack_start(settings_button, False, False, 0)
         sidebar_action_box.pack_end(delete_units_button, False, False, 0)
         sidebar_action_box.pack_end(add_units_button, False, False, 0)
         
-
         # drag n drop grid construct
         drag_drop_grid = Gtk.Grid()
         drag_drop_grid.props.margin_start= 6
@@ -161,27 +148,34 @@ class MovensWindow(Gtk.ApplicationWindow):
         # units listbox scrolled window construct
         units_listbox_scrolled = Gtk.ScrolledWindow()
         units_listbox_scrolled.props.hexpand = True
-        units_listbox_scrolled.props.margin_bottom = 6
+        units_listbox_scrolled.props.vexpand = True
+        # units_listbox_scrolled.props.margin_bottom = 6
         units_listbox_scrolled.add(units_listbox)
+        units_listbox_scrolled.connect("edge_overshot", self.on_scrolling)
+        # units_listbox_scrolled.connect("edge_overshot", self.on_scrolling)
 
-        # sidebar construct
+        #---- sidebar -----#
         sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.on_scroll_separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+        self.on_scroll_separator.props.no_show_all = True
+
         sidebar.get_style_context().add_class("pane")
         sidebar.add(drag_drop_grid)
         sidebar.add(motion_grid_revealer)
+        sidebar.add(self.on_scroll_separator)
         sidebar.pack_start(units_listbox_scrolled, True, True, 0)
         sidebar.add(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
         sidebar.pack_end(sidebar_action_box, False, False, 0)
-        sidebar.set_size_request(255, -1)
+        sidebar.set_size_request(300, -1)
 
-        # main pane construct
+        #---- main pane -----#
         pane = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
         pane.get_style_context().add_class("pane")
         pane.pack1(sidebar, False, False)
         pane.pack2(stack, True, False)
         #pane.props.min_position = 255
 
-        # headerbar construct
+        #---- headerbar -----#
         # headerbar search field
         search_entry = Gtk.SearchEntry()
         search_entry.props.placeholder_text = "Search\u2026"
@@ -223,7 +217,7 @@ class MovensWindow(Gtk.ApplicationWindow):
         # headerbar right construct
         right_header = Gtk.HeaderBar()
         right_header.props.decoration_layout = ":maximize"
-        right_header.props.show_close_button = False
+        right_header.props.show_close_button = True
         right_header.get_style_context().add_class("right-header")
         right_header.get_style_context().add_class("titlebar")
         right_header.get_style_context().add_class("default-decoration")
@@ -257,16 +251,27 @@ class MovensWindow(Gtk.ApplicationWindow):
         # hide toolbar buttons on all rows by iterating through all the child objects in listbox
         units_listbox.foreach(lambda child, data: child.delete_button.hide(), None)
 
+        #self.on_scroll_separatorhide()
+
+    def on_scrolling(self, widget, button_position):
+        if self.on_scroll_separator.get_visible() == False:
+            self.on_scroll_separator.show()
+            print('show')
+        else:
+            self.on_scroll_separator.hide()
+            print('hide')
 
 #------------------CLASS-SEPARATOR------------------#
 
 
 class UnitRow(Gtk.ListBoxRow):
+
+    # Add custom signals
+    # GObject.signal_new(signal_name, type, flags, return_type, param_types)
+    GObject.signal_new("added_new_unit", Gtk.ListBoxRow, GObject.SIGNAL_RUN_LAST, GObject.TYPE_BOOLEAN, [GObject.TYPE_STRING])
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        __gsignals__ = {'added_new_item': (GObject.SIGNAL_RUN_FIRST, None, (str,))}
-        __gsignals__ = {'item_deleted': (GObject.SIGNAL_RUN_FIRST, None, (str,))}
 
         # unit row delete button
         self.delete_button = Gtk.Button(image=Gtk.Image.new_from_icon_name("edit-delete-symbolic", Gtk.IconSize.MENU))
@@ -274,7 +279,6 @@ class UnitRow(Gtk.ListBoxRow):
         self.delete_button.props.can_default = False
         self.delete_button.get_style_context().add_class("flat")
 
-        #self.unit_icon = Gtk.Image().new_from_icon_name("application-default-icon", Gtk.IconSize.DIALOG)
         self.unit_icon = Gtk.Button(image=Gtk.Image.new_from_icon_name("application-default-icon", Gtk.IconSize.DIALOG))
         self.unit_icon.props.can_focus = False
         self.unit_icon.props.can_default = False
@@ -291,63 +295,78 @@ class UnitRow(Gtk.ListBoxRow):
         overlay.add_overlay(self.status_image)
         
         # unit name label
-        unit_name = "MyName"
-        unit_name_label = Gtk.Label()
-        unit_name_label.props.ellipsize = Pango.EllipsizeMode.END
-        unit_name_label.props.max_width_chars = 50
-        unit_name_label.props.halign = Gtk.Align.START
-        unit_name_label.props.valign = Gtk.Align.END
-        unit_name_label.set_markup(f"<b>{unit_name}</b>")
+        self.unit_name_label = Gtk.Label("Name")
+        self.unit_name_label.props.ellipsize = Pango.EllipsizeMode.END
+        self.unit_name_label.props.max_width_chars = 50
+        self.unit_name_label.props.halign = Gtk.Align.START
+        self.unit_name_label.props.valign = Gtk.Align.END
+        self.unit_name_label.get_style_context().add_class("unit-name-row")
         
         # unit path label
-        contents = Gtk.Label("Unit Path Here")
-        contents.props.hexpand = False
-        contents.props.max_width_chars = 50
-        contents.props.halign = Gtk.Align.START
-        contents.props.valign = Gtk.Align.CENTER
+        self.unit_path_label = Gtk.Label("/home/adi/Downloads")
+        self.unit_path_label.props.max_width_chars = 50
+        self.unit_path_label.props.halign = Gtk.Align.START
+        self.unit_path_label.props.valign = Gtk.Align.CENTER
+        self.unit_path_label.get_style_context().add_class("unit-path-row")
 
-        # unit last run timestamp label
+        # unit lastrun  label
         lastrun = datetime.now()
-        timestamp_label = Gtk.Label(lastrun)
-        timestamp_label.props.halign = Gtk.Align.START
-        timestamp_label.props.valign = Gtk.Align.CENTER
-        timestamp_label.props.max_width_chars = 45
-        timestamp_label.props.ellipsize = Pango.EllipsizeMode.END
+        self.unit_lastrun_label = Gtk.Label(lastrun)
+        self.unit_lastrun_label.props.max_width_chars = 50
+        self.unit_lastrun_label.props.halign = Gtk.Align.START
+        self.unit_lastrun_label.props.valign = Gtk.Align.CENTER
+        self.unit_lastrun_label.get_style_context().add_class("unit-lastrun-row")
         
-        #grid for content and timestamp
+        # grid unit labels
         label_grid = Gtk.Grid()
-        label_grid.props.row_spacing = 3
-        label_grid.attach(unit_name_label, 0, 0, 1, 1)
-        label_grid.attach(contents, 0, 1, 1, 1)
-        #label_grid.attach(timestamp_label, 0, 2, 1, 1)
+        label_grid.props.row_spacing = 2
+        label_grid.attach(self.unit_name_label, 0, 0, 1, 1)
+        label_grid.attach(self.unit_path_label, 0, 1, 1, 1)
+        label_grid.attach(self.unit_lastrun_label, 0, 2, 1, 1)
+        label_grid.props.margin_top = 4
 
-
+        # box for all widgets
         row_box = Gtk.Box(Gtk.Orientation.HORIZONTAL, 10)
-        # row_box.props.margin = 16
         row_box.props.margin_top = row_box.props.margin_bottom = 10
-        row_box.props.margin_left = row_box.props.margin_right = 6
+        row_box.props.margin_left = 6
+        row_box.props.margin_right = 10
         row_box.pack_start(overlay, False, False, 0)
         row_box.pack_start(label_grid, True, True, 0)
         row_box.pack_end(self.delete_button, False, False, 0)
 
-
-
         self.add(row_box)
-        # self.get_style_context().add_class(Gtk.STYLE_CLASS_MENUITEM)
-        
+
+        # self.connect('added_new_unit', self.custom_signal1_method)
+        # self.emit('added_new_unit', 'hello from signal')
+
+    def custom_signal1_method(self, *args):
+        #print('Custom signal')
+        print(args)
+
     def on_unit_icon_clicked(self, widget):
         if self.is_selected() is True:
             if self.status_image.props.icon_name == "user-offline":
                 self.status_image.set_from_icon_name("user-available", Gtk.IconSize.MENU)
+                self.unit_icon.get_style_context().add_class("unit-enabled")
+                self.unit_icon.get_style_context().remove_class("unit-disabled")
             else:
                 self.status_image.set_from_icon_name("user-offline", Gtk.IconSize.MENU)
+                self.unit_icon.get_style_context().add_class("unit-disabled")
+                self.unit_icon.get_style_context().remove_class("unit-enabled")
         else:
             self.activate()
-        
+
+    def on_unit_lastrun_error(self, widget):
+        pass
+
+    def on_unit_row_added(self, widget):
+        pass
+
 
 
 
 #------------------CLASS-SEPARATOR------------------#
+
 
 class UnitEditor(Gtk.Box):
     def __init__(self, *args, **kwargs):
@@ -358,9 +377,9 @@ class UnitEditor(Gtk.Box):
         #self.unit_icon.connect("changed", self.on_icon_changed)
         
         # name label
-        unit_name_label = Gtk.Label("Name")
-        unit_name_label.get_style_context().add_class("h4")
-        unit_name_label.props.halign = Gtk.Align.START
+        self.unit_name_label = Gtk.Label("Name")
+        self.unit_name_label.get_style_context().add_class("h4")
+        self.unit_name_label.props.halign = Gtk.Align.START
 
         # name entry
         unit_name_entry = Gtk.Entry()
@@ -371,7 +390,7 @@ class UnitEditor(Gtk.Box):
 
         # name header entry construct
         unit_name_header = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        unit_name_header.add(unit_name_label)
+        unit_name_header.add(self.unit_name_label)
         unit_name_header.add(unit_name_entry)
         
         # name box
@@ -429,7 +448,6 @@ class UnitEditor(Gtk.Box):
 
     def on_entry_changed(self, event, name):
         pass
-
 
 
 #------------------CLASS-SEPARATOR------------------#

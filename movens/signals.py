@@ -27,18 +27,27 @@ class MyObject(GObject.GObject):
         'adi': (GObject.SIGNAL_RUN_FIRST, None, (int,))
     }
 
-    # def do_adi(self, arg):
-    #     print("method handler for `my_signal' called with argument", arg)
-        
-        
+    #@GObject.Signal(name='adi', flags=GObject.SignalFlags.RUN_FIRST, return_type=None, arg_types=None, accumulator=None, accu_data=None)
+    def test(self, *args):
+        print("Handler", args)
+
+    # def do_adi(self):
+    #     print("method handler for `my_signal' called with argument")
+
 
 myobj = MyObject()
 
-myobj.emit("adi", 'abcd') # emit the signal "my_signal", with the
+myobj.emit("adi", 2) # emit the signal "my_signal", with the
                              # argument 42
+
 
 print(type(myobj))
 
-print(dir(myobj))
+# print(dir(myobj))
+
+myobj = MyObject()
+
+myobj.emit("adi", 2) # emit the signal "my_signal", with the
+                             # argument 42
 
 
